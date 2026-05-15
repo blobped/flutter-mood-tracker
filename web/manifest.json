@@ -1,0 +1,12 @@
+{
+  "name": "Mood Tracker",
+  "short_name": "Mood",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#F7F3EA",
+  "theme_color": "#184E77",
+  "description": "A single-screen Flutter web mood tracker.",
+  "orientation": "portrait-primary",
+  "prefer_related_applications": false,
+  "icons": []
+}
