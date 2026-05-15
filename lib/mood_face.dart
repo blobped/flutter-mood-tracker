@@ -59,7 +59,7 @@ class MoodFacePainter extends CustomPainter {
       case MoodType.happy:
         _paintHappy(canvas, size, center, featurePaint, eyePaint);
       case MoodType.calm:
-        _paintCalm(canvas, size, center, featurePaint, eyePaint);
+        _paintCalm(canvas, size, center, featurePaint);
       case MoodType.sad:
         _paintSad(canvas, size, center, featurePaint, eyePaint);
     }
@@ -70,7 +70,6 @@ class MoodFacePainter extends CustomPainter {
     Size size,
     Offset center,
     Paint featurePaint,
-    Paint eyePaint,
   ) {
     final eyeRadius = size.shortestSide * 0.048;
     canvas.drawCircle(
