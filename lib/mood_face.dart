@@ -70,6 +70,7 @@ class MoodFacePainter extends CustomPainter {
     Size size,
     Offset center,
     Paint featurePaint,
+    Paint eyePaint,
   ) {
     final eyeRadius = size.shortestSide * 0.048;
     canvas.drawCircle(
@@ -113,7 +114,6 @@ class MoodFacePainter extends CustomPainter {
     Size size,
     Offset center,
     Paint featurePaint,
-    Paint eyePaint,
   ) {
     final eyePaintStroke = featurePaint..strokeWidth = size.shortestSide * 0.04;
     canvas.drawArc(
@@ -185,7 +185,10 @@ class MoodFacePainter extends CustomPainter {
         center.dx + size.width * 0.22,
         center.dy + size.height * 0.2,
       );
-    canvas.drawPath(mouth, featurePaint..strokeWidth = size.shortestSide * 0.052);
+    canvas.drawPath(
+      mouth,
+      featurePaint..strokeWidth = size.shortestSide * 0.052,
+    );
   }
 
   @override
