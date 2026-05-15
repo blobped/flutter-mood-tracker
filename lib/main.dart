@@ -40,6 +40,12 @@ class _MoodHomePageState extends State<MoodHomePage> {
   final MoodController _controller = MoodController();
 
   @override
+  void initState() {
+    super.initState();
+    _controller.load();
+  }
+
+  @override
   void dispose() {
     _controller.dispose();
     super.dispose();
@@ -50,6 +56,12 @@ class _MoodHomePageState extends State<MoodHomePage> {
     return AnimatedBuilder(
       animation: _controller,
       builder: (context, _) {
+        if (!_controller.isReady) {
+          return const Scaffold(
+            body: Center(child: CircularProgressIndicator()),
+          );
+        }
+
         return Scaffold(
           body: SafeArea(
             child: Center(
