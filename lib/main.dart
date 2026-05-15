@@ -69,20 +69,20 @@ class _MoodHomePageState extends State<MoodHomePage> {
                 constraints: const BoxConstraints(maxWidth: 960),
                 child: Padding(
                   padding: const EdgeInsets.all(24),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      const _Header(),
-                      const SizedBox(height: 28),
-                      _MoodPicker(
-                        onMoodSelected: _controller.logMood,
-                        latestEntry: _controller.latestEntry,
-                      ),
-                      const SizedBox(height: 28),
-                      Expanded(
-                        child: _MoodTimeline(entries: _controller.entries),
-                      ),
-                    ],
+                  child: SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        const _Header(),
+                        const SizedBox(height: 28),
+                        _MoodPicker(
+                          onMoodSelected: _controller.logMood,
+                          latestEntry: _controller.latestEntry,
+                        ),
+                        const SizedBox(height: 28),
+                        _MoodTimeline(entries: _controller.entries),
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -219,7 +219,10 @@ class _MoodTimeline extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (entries.isEmpty) {
-      return const _EmptyTimeline();
+      return const SizedBox(
+        height: 190,
+        child: _EmptyTimeline(),
+      );
     }
 
     return Column(
