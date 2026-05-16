@@ -4,7 +4,7 @@ A single-screen Flutter web mood tracker built for a take-home evaluation.
 
 ## Live Demo
 
-Deployment URL: pending
+Deployment URL: https://web-beta-rouge-35.vercel.app
 
 ## Requirements Covered
 
