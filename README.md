@@ -29,9 +29,9 @@ the latest seven items, and persists those entries with `shared_preferences`.
 
 Mood faces are drawn by `MoodFacePainter`, a `CustomPainter` that uses canvas
 primitives instead of images, emoji, or icon fonts. Each mood changes the drawn
-geometry: the happy face uses raised brows and an upward mouth arc, the calm
-face uses closed eyes and a straight mouth, and the sad face uses angled brows
-with a curved path for the frown.
+geometry: the happy face uses an upward mouth arc, the calm face uses closed
+eyes and a straight mouth, the sad face uses curved worried brows with a frown,
+and the angry face uses sharp angled brows with a tighter frown.
 
 ## Loom Walkthrough Notes
 
