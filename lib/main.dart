@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
 import 'mood_controller.dart';
@@ -16,6 +17,7 @@ class MoodTrackerApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Mood Tracker',
+      scrollBehavior: const _MoodScrollBehavior(),
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(
           seedColor: const Color(0xFF184E77),
@@ -27,6 +29,18 @@ class MoodTrackerApp extends StatelessWidget {
       home: const MoodHomePage(),
     );
   }
+}
+
+class _MoodScrollBehavior extends MaterialScrollBehavior {
+  const _MoodScrollBehavior();
+
+  @override
+  Set<PointerDeviceKind> get dragDevices => {
+        PointerDeviceKind.touch,
+        PointerDeviceKind.mouse,
+        PointerDeviceKind.trackpad,
+        PointerDeviceKind.stylus,
+      };
 }
 
 class MoodHomePage extends StatefulWidget {
@@ -236,18 +250,49 @@ class _MoodTimeline extends StatelessWidget {
               ),
         ),
         const SizedBox(height: 16),
-        SizedBox(
-          height: 190,
-          child: ListView.separated(
-            scrollDirection: Axis.horizontal,
-            itemCount: entries.length,
-            separatorBuilder: (_, _) => const SizedBox(width: 14),
-            itemBuilder: (context, index) {
-              return _TimelineEntryCard(entry: entries[index]);
-            },
-          ),
-        ),
+        _TimelineScroller(entries: entries),
       ],
+    );
+  }
+}
+
+class _TimelineScroller extends StatefulWidget {
+  const _TimelineScroller({required this.entries});
+
+  final List<MoodEntry> entries;
+
+  @override
+  State<_TimelineScroller> createState() => _TimelineScrollerState();
+}
+
+class _TimelineScrollerState extends State<_TimelineScroller> {
+  final ScrollController _scrollController = ScrollController();
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 206,
+      child: Scrollbar(
+        controller: _scrollController,
+        thumbVisibility: true,
+        trackVisibility: true,
+        child: ListView.separated(
+          controller: _scrollController,
+          padding: const EdgeInsets.only(bottom: 16),
+          scrollDirection: Axis.horizontal,
+          itemCount: widget.entries.length,
+          separatorBuilder: (_, _) => const SizedBox(width: 14),
+          itemBuilder: (context, index) {
+            return _TimelineEntryCard(entry: widget.entries[index]);
+          },
+        ),
+      ),
     );
   }
 }
