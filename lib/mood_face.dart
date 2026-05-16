@@ -79,18 +79,6 @@ class MoodFacePainter extends CustomPainter {
       eyePaint,
     );
 
-    final browPaint = featurePaint..strokeWidth = size.shortestSide * 0.032;
-    canvas.drawLine(
-      center.translate(-size.width * 0.26, -size.height * 0.24),
-      center.translate(-size.width * 0.08, -size.height * 0.28),
-      browPaint,
-    );
-    canvas.drawLine(
-      center.translate(size.width * 0.08, -size.height * 0.28),
-      center.translate(size.width * 0.26, -size.height * 0.24),
-      browPaint,
-    );
-
     canvas.drawArc(
       Rect.fromCenter(
         center: center.translate(0, size.height * 0.04),
@@ -137,19 +125,19 @@ class MoodFacePainter extends CustomPainter {
   }
 
   void _paintSad(Canvas canvas, Size size, Offset center, Paint featurePaint) {
-    final browPaint = featurePaint..strokeWidth = size.shortestSide * 0.04;
+    final browPaint = featurePaint..strokeWidth = size.shortestSide * 0.036;
     _drawCurvedBrow(
       canvas,
-      start: center.translate(-size.width * 0.26, -size.height * 0.27),
-      control: center.translate(-size.width * 0.18, -size.height * 0.2),
-      end: center.translate(-size.width * 0.08, -size.height * 0.23),
+      start: center.translate(-size.width * 0.24, -size.height * 0.24),
+      control: center.translate(-size.width * 0.18, -size.height * 0.18),
+      end: center.translate(-size.width * 0.09, -size.height * 0.2),
       paint: browPaint,
     );
     _drawCurvedBrow(
       canvas,
-      start: center.translate(size.width * 0.08, -size.height * 0.23),
-      control: center.translate(size.width * 0.18, -size.height * 0.2),
-      end: center.translate(size.width * 0.26, -size.height * 0.27),
+      start: center.translate(size.width * 0.09, -size.height * 0.2),
+      control: center.translate(size.width * 0.18, -size.height * 0.18),
+      end: center.translate(size.width * 0.24, -size.height * 0.24),
       paint: browPaint,
     );
 
@@ -206,15 +194,15 @@ class MoodFacePainter extends CustomPainter {
       eyePaint,
     );
 
-    final browPaint = featurePaint..strokeWidth = size.shortestSide * 0.05;
+    final browPaint = featurePaint..strokeWidth = size.shortestSide * 0.044;
     canvas.drawLine(
-      center.translate(-size.width * 0.27, -size.height * 0.24),
-      center.translate(-size.width * 0.09, -size.height * 0.15),
+      center.translate(-size.width * 0.24, -size.height * 0.22),
+      center.translate(-size.width * 0.1, -size.height * 0.15),
       browPaint,
     );
     canvas.drawLine(
-      center.translate(size.width * 0.09, -size.height * 0.15),
-      center.translate(size.width * 0.27, -size.height * 0.24),
+      center.translate(size.width * 0.1, -size.height * 0.15),
+      center.translate(size.width * 0.24, -size.height * 0.22),
       browPaint,
     );
 

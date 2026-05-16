@@ -125,13 +125,6 @@ class _Header extends StatelessWidget {
             fontWeight: FontWeight.w800,
           ),
         ),
-        const SizedBox(height: 8),
-        Text(
-          'Tap a face to log how you feel today.',
-          style: textTheme.titleMedium?.copyWith(
-            color: const Color(0xFF56636A),
-          ),
-        ),
       ],
     );
   }
