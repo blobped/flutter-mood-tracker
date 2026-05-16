@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
@@ -328,16 +330,27 @@ class _TimelineEntryCard extends StatefulWidget {
   State<_TimelineEntryCard> createState() => _TimelineEntryCardState();
 }
 
-class _TimelineEntryCardState extends State<_TimelineEntryCard> {
-  bool _isAnimating = false;
+class _TimelineEntryCardState extends State<_TimelineEntryCard>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _animationController;
+
+  @override
+  void initState() {
+    super.initState();
+    _animationController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 420),
+    );
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
 
   void _playAnimation() {
-    setState(() => _isAnimating = true);
-    Future<void>.delayed(const Duration(milliseconds: 260), () {
-      if (mounted) {
-        setState(() => _isAnimating = false);
-      }
-    });
+    _animationController.forward(from: 0);
   }
 
   @override
@@ -346,86 +359,91 @@ class _TimelineEntryCardState extends State<_TimelineEntryCard> {
 
     return GestureDetector(
       onTap: _playAnimation,
-      child: AnimatedScale(
-        scale: _isAnimating ? 1.07 : 1,
-        duration: const Duration(milliseconds: 180),
-        curve: Curves.easeOutBack,
-        child: AnimatedContainer(
-          duration: const Duration(milliseconds: 180),
-          width: 154,
-          padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(8),
-            border: Border.all(
-              color: _isAnimating ? entry.mood.accent : const Color(0xFFE2DCCF),
-              width: _isAnimating ? 3 : 1,
+      child: AnimatedBuilder(
+        animation: _animationController,
+        builder: (context, _) {
+          final animation = _animationController.value;
+          final pulse = math.sin(animation * math.pi);
+          final shake =
+              math.sin(animation * math.pi * 8) * 0.018 * (1 - animation);
+
+          return Transform.rotate(
+            angle: shake,
+            child: Transform.scale(
+              scale: 1 + pulse * 0.04,
+              child: AnimatedContainer(
+                duration: const Duration(milliseconds: 120),
+                width: 154,
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(
+                    color: pulse > 0
+                        ? entry.mood.accent
+                        : const Color(0xFFE2DCCF),
+                    width: 1 + pulse * 2,
+                  ),
+                  boxShadow: [
+                    if (pulse > 0)
+                      BoxShadow(
+                        color: entry.mood.accent.withValues(
+                          alpha: 0.22 * pulse,
+                        ),
+                        blurRadius: 18 * pulse,
+                        spreadRadius: 2 * pulse,
+                      ),
+                  ],
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Align(
+                      alignment: Alignment.topLeft,
+                      child: Container(
+                        width: 34,
+                        height: 5,
+                        decoration: BoxDecoration(
+                          color: entry.mood.accent,
+                          borderRadius: BorderRadius.circular(99),
+                        ),
+                      ),
+                    ),
+                    MoodFace(mood: entry.mood, size: 72, animationValue: pulse),
+                    Column(
+                      children: [
+                        Text(
+                          entry.mood.label,
+                          style: const TextStyle(
+                            color: Color(0xFF263238),
+                            fontWeight: FontWeight.w800,
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          _formatDate(entry.loggedAt),
+                          style: const TextStyle(
+                            color: Color(0xFF69777E),
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        const SizedBox(height: 2),
+                        Text(
+                          _formatTime(entry.loggedAt),
+                          style: const TextStyle(
+                            color: Color(0xFF69777E),
+                            fontSize: 12,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
             ),
-            boxShadow: [
-              if (_isAnimating)
-                BoxShadow(
-                  color: entry.mood.accent.withValues(alpha: 0.28),
-                  blurRadius: 18,
-                  spreadRadius: 2,
-                ),
-            ],
-          ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Align(
-                alignment: Alignment.topLeft,
-                child: Container(
-                  width: 34,
-                  height: 5,
-                  decoration: BoxDecoration(
-                    color: entry.mood.accent,
-                    borderRadius: BorderRadius.circular(99),
-                  ),
-                ),
-              ),
-              AnimatedRotation(
-                turns: _isAnimating ? -0.035 : 0,
-                duration: const Duration(milliseconds: 180),
-                curve: Curves.easeOutBack,
-                child: AnimatedScale(
-                  scale: _isAnimating ? 1.16 : 1,
-                  duration: const Duration(milliseconds: 180),
-                  curve: Curves.easeOutBack,
-                  child: MoodFace(mood: entry.mood, size: 72),
-                ),
-              ),
-              Column(
-                children: [
-                  Text(
-                    entry.mood.label,
-                    style: const TextStyle(
-                      color: Color(0xFF263238),
-                      fontWeight: FontWeight.w800,
-                    ),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    _formatDate(entry.loggedAt),
-                    style: const TextStyle(
-                      color: Color(0xFF69777E),
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                  const SizedBox(height: 2),
-                  Text(
-                    _formatTime(entry.loggedAt),
-                    style: const TextStyle(
-                      color: Color(0xFF69777E),
-                      fontSize: 12,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
+          );
+        },
       ),
     );
   }
