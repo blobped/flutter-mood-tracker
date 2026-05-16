@@ -384,7 +384,17 @@ class _TimelineEntryCardState extends State<_TimelineEntryCard> {
                   ),
                 ),
               ),
-              MoodFace(mood: entry.mood, size: 72),
+              AnimatedRotation(
+                turns: _isAnimating ? -0.035 : 0,
+                duration: const Duration(milliseconds: 180),
+                curve: Curves.easeOutBack,
+                child: AnimatedScale(
+                  scale: _isAnimating ? 1.16 : 1,
+                  duration: const Duration(milliseconds: 180),
+                  curve: Curves.easeOutBack,
+                  child: MoodFace(mood: entry.mood, size: 72),
+                ),
+              ),
               Column(
                 children: [
                   Text(
