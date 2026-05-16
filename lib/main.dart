@@ -36,11 +36,11 @@ class _MoodScrollBehavior extends MaterialScrollBehavior {
 
   @override
   Set<PointerDeviceKind> get dragDevices => {
-        PointerDeviceKind.touch,
-        PointerDeviceKind.mouse,
-        PointerDeviceKind.trackpad,
-        PointerDeviceKind.stylus,
-      };
+    PointerDeviceKind.touch,
+    PointerDeviceKind.mouse,
+    PointerDeviceKind.trackpad,
+    PointerDeviceKind.stylus,
+  };
 }
 
 class MoodHomePage extends StatefulWidget {
@@ -89,12 +89,12 @@ class _MoodHomePageState extends State<MoodHomePage> {
                       children: [
                         const _Header(),
                         const SizedBox(height: 28),
-                        _MoodPicker(
-                          onMoodSelected: _controller.logMood,
+                        _MoodPicker(onMoodSelected: _controller.logMood),
+                        const SizedBox(height: 28),
+                        _MoodTimeline(
+                          entries: _controller.entries,
                           latestEntry: _controller.latestEntry,
                         ),
-                        const SizedBox(height: 28),
-                        _MoodTimeline(entries: _controller.entries),
                       ],
                     ),
                   ),
@@ -138,18 +138,12 @@ class _Header extends StatelessWidget {
 }
 
 class _MoodPicker extends StatelessWidget {
-  const _MoodPicker({
-    required this.onMoodSelected,
-    required this.latestEntry,
-  });
+  const _MoodPicker({required this.onMoodSelected});
 
   final ValueChanged<MoodType> onMoodSelected;
-  final MoodEntry? latestEntry;
 
   @override
   Widget build(BuildContext context) {
-    final latest = latestEntry;
-
     return DecoratedBox(
       decoration: BoxDecoration(
         color: Colors.white,
@@ -162,13 +156,11 @@ class _MoodPicker extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              latest == null
-                  ? 'How are you feeling?'
-                  : 'Latest mood: ${latest.mood.label}',
+              'Tap a face to log how you feel now.',
               style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                    fontWeight: FontWeight.w700,
-                    color: const Color(0xFF263238),
-                  ),
+                fontWeight: FontWeight.w700,
+                color: const Color(0xFF263238),
+              ),
             ),
             const SizedBox(height: 18),
             Wrap(
@@ -189,10 +181,7 @@ class _MoodPicker extends StatelessWidget {
 }
 
 class _MoodButton extends StatelessWidget {
-  const _MoodButton({
-    required this.mood,
-    required this.onPressed,
-  });
+  const _MoodButton({required this.mood, required this.onPressed});
 
   final MoodType mood;
   final VoidCallback onPressed;
@@ -226,31 +215,71 @@ class _MoodButton extends StatelessWidget {
 }
 
 class _MoodTimeline extends StatelessWidget {
-  const _MoodTimeline({required this.entries});
+  const _MoodTimeline({required this.entries, required this.latestEntry});
 
   final List<MoodEntry> entries;
+  final MoodEntry? latestEntry;
 
   @override
   Widget build(BuildContext context) {
     if (entries.isEmpty) {
-      return const SizedBox(
-        height: 190,
-        child: _EmptyTimeline(),
-      );
+      return const SizedBox(height: 190, child: _EmptyTimeline());
     }
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        _LatestMoodStatus(entry: latestEntry),
+        const SizedBox(height: 10),
         Text(
           'Past 7 entries',
           style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                color: const Color(0xFF263238),
-                fontWeight: FontWeight.w800,
-              ),
+            color: const Color(0xFF263238),
+            fontWeight: FontWeight.w800,
+          ),
         ),
         const SizedBox(height: 16),
         _TimelineScroller(entries: entries),
+      ],
+    );
+  }
+}
+
+class _LatestMoodStatus extends StatelessWidget {
+  const _LatestMoodStatus({required this.entry});
+
+  final MoodEntry? entry;
+
+  @override
+  Widget build(BuildContext context) {
+    final latest = entry;
+
+    if (latest == null) {
+      return const Text(
+        'No moods logged yet.',
+        style: TextStyle(color: Color(0xFF69777E), fontWeight: FontWeight.w700),
+      );
+    }
+
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Container(
+          width: 10,
+          height: 10,
+          decoration: BoxDecoration(
+            color: latest.mood.accent,
+            shape: BoxShape.circle,
+          ),
+        ),
+        const SizedBox(width: 8),
+        Text(
+          'Latest mood: ${latest.mood.label}',
+          style: const TextStyle(
+            color: Color(0xFF263238),
+            fontWeight: FontWeight.w800,
+          ),
+        ),
       ],
     );
   }
@@ -380,6 +409,15 @@ class _TimelineEntryCardState extends State<_TimelineEntryCard> {
                       fontWeight: FontWeight.w600,
                     ),
                   ),
+                  const SizedBox(height: 2),
+                  Text(
+                    _formatTime(entry.loggedAt),
+                    style: const TextStyle(
+                      color: Color(0xFF69777E),
+                      fontSize: 12,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
                 ],
               ),
             ],
@@ -406,6 +444,18 @@ class _TimelineEntryCardState extends State<_TimelineEntryCard> {
     ];
 
     return '${months[value.month - 1]} ${value.day}';
+  }
+
+  String _formatTime(DateTime value) {
+    final hour = value.hour == 0
+        ? 12
+        : value.hour > 12
+        ? value.hour - 12
+        : value.hour;
+    final minute = value.minute.toString().padLeft(2, '0');
+    final period = value.hour >= 12 ? 'PM' : 'AM';
+
+    return '$hour:$minute $period';
   }
 }
 
