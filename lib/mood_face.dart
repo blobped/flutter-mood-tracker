@@ -128,16 +128,16 @@ class MoodFacePainter extends CustomPainter {
     final browPaint = featurePaint..strokeWidth = size.shortestSide * 0.036;
     _drawCurvedBrow(
       canvas,
-      start: center.translate(-size.width * 0.09, -size.height * 0.2),
-      control: center.translate(-size.width * 0.18, -size.height * 0.18),
-      end: center.translate(-size.width * 0.24, -size.height * 0.24),
+      start: center.translate(-size.width * 0.23, -size.height * 0.2),
+      control: center.translate(-size.width * 0.17, -size.height * 0.17),
+      end: center.translate(-size.width * 0.09, -size.height * 0.24),
       paint: browPaint,
     );
     _drawCurvedBrow(
       canvas,
-      start: center.translate(size.width * 0.24, -size.height * 0.24),
-      control: center.translate(size.width * 0.18, -size.height * 0.18),
-      end: center.translate(size.width * 0.09, -size.height * 0.2),
+      start: center.translate(size.width * 0.09, -size.height * 0.24),
+      control: center.translate(size.width * 0.17, -size.height * 0.17),
+      end: center.translate(size.width * 0.23, -size.height * 0.2),
       paint: browPaint,
     );
 
