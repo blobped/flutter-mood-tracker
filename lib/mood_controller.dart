@@ -1,6 +1,5 @@
-import 'dart:html' as html;
-
 import 'package:flutter/foundation.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'mood_entry.dart';
 
@@ -17,11 +16,9 @@ class MoodController extends ChangeNotifier {
 
   bool get isReady => _isReady;
 
-  void load() {
-    final storedEntries = html.window.localStorage[_storageKey]
-            ?.split(_storageSeparator)
-            .where((entry) => entry.isNotEmpty) ??
-        const Iterable<String>.empty();
+  Future<void> load() async {
+    final preferences = await SharedPreferences.getInstance();
+    final storedEntries = preferences.getStringList(_storageKey) ?? [];
 
     _entries
       ..clear()
@@ -53,11 +50,11 @@ class MoodController extends ChangeNotifier {
     _save();
   }
 
-  static const String _storageSeparator = '\n';
-
-  void _save() {
-    html.window.localStorage[_storageKey] = _entries
-        .map((entry) => entry.storageValue)
-        .join(_storageSeparator);
+  Future<void> _save() async {
+    final preferences = await SharedPreferences.getInstance();
+    await preferences.setStringList(
+      _storageKey,
+      _entries.map((entry) => entry.storageValue).toList(),
+    );
   }
 }

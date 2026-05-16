@@ -25,7 +25,7 @@ flutter run -d chrome
 
 State is managed with a small `ChangeNotifier` controller. The controller owns
 the mood entries, exposes an immutable view to the UI, keeps the list capped to
-the latest seven items, and persists those entries to browser local storage.
+the latest seven items, and persists those entries with `shared_preferences`.
 
 Mood faces are drawn by `MoodFacePainter`, a `CustomPainter` that uses canvas
 primitives instead of images, emoji, or icon fonts. Each mood changes the drawn
