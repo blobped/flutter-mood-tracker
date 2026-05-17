@@ -32,12 +32,3 @@ primitives instead of images, emoji, or icon fonts. Each mood changes the drawn
 geometry: the happy face uses an upward mouth arc, the calm face uses closed
 eyes and a straight mouth, the sad face uses curved worried brows with a frown,
 and the angry face uses sharp angled brows with a tighter frown.
-
-## Loom Walkthrough Notes
-
-- State management: `MoodController` extends `ChangeNotifier`, stores entries,
-  trims to seven, notifies the screen, and saves to local storage.
-- CustomPainter: `MoodFacePainter` switches on the mood and draws the face,
-  features, brows, and mouth directly on the canvas.
-- With more time: add optional notes and a calendar or chart view so the user
-  can spot mood patterns over longer periods.
